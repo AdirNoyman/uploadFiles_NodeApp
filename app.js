@@ -1,5 +1,13 @@
 require('dotenv').config();
 require('express-async-errors');
+// use cloudinary's version 2
+const cloudinary = require('cloudinary').v2;
+// configure cloudinary
+cloudinary.config({
+	cloud_name: process.env.CLOUDINARY_NAME,
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const express = require('express');
 const app = express();
@@ -19,7 +27,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 app.use(express.static('./public'));
 // loading the data sent in the body to the request object
 app.use(express.json());
-app.use(fileUpload());
+app.use(fileUpload({ useTempFiles: true }));
 
 app.get('/', (req, res) => {
 	res.send('<h1>File Upload Starter</h1>');
